@@ -155,8 +155,64 @@ namespace UNITREE_LEGGED_SDK //UNITREE_LEGGED_SDK에 포함되는 모든 내용�
     uint32_t crc; //CRC 체크섬으로 데이터의 무결성을 검증
   } LowCmd; //low level control, LowCmd 구조체 정의
 
+  //HighState 구조체 정의
+  typedef struct
+  {
+    std::array<uint8_t, 2> head; //패킷의 헤더
+    uint8_t levelFlag; //로봇의 통신 수준을 나타내는 플래그
+    uint8_t frameReserve; //프레임 예약 필드
 
+    std::array<uint32_t, 2> SN; //시리얼 넘버
+    std::array<uint32_t, 2> version; //소프트웨어 또는 하드웨어 버전 정보
+    uint16_t bandWidth; //통신 대역폭
+    IMU imu; //IMU 데이터 포함
+    std::array<MotorState, 20> motorState; //20개의 모터 상태를 나타냄
+    BmsState bms; //배터리 관리 시스템(BMS) 상태를 나타냄
+    std::array<int16_t, 4> footForce; //foot force in Z axis, which is parallel to gravity(unit: N), 발에 작용하는 힘을 나타내며 중력 방향(z축)으로의 힘
+    std::array<int16_t, 4> footForceEst; //foot force in z axis, which is paralle to gravity(unit: N), 추정된 발의 힘을 나타내며 중력 방향(Z축)으로의 힘
+    uint8_t mode; //current mode, more detail in HighCmd comment, 현재 로봇의 모드, HighCmd에 자세하게 설명
+    float progress; //reserve, 예약된 필드로 현재 사용되지 않지만 미래 확장을 위해 존재
+    uint8_t gaitType; //0.idle, 1.trot, 2.trot running, 3.climb stair, 4.trot obstacle, 보행 유형
+    float footRaiseHeight; //(unit: m, default: 0.08m), foot up height while walking, 발을 들어올리는 높이이며 기본 값은 0.08m
+    std::array<float, 3> position; //(unit: m), from own odometry in inertial frame, usually drift, 로봇의 위치를 나타내며 로봇 자체 오도메트리에서 얻은 관성 프레임에서의 위치이고, 보통 드리프트가 발생할 수 있음
+    float bodyHeight; //(unit: m, default: 0.28m), 로봇 몸체의 높이를 나타내며 기본 값은 0.28m
+    std::array<float, 3> velocity; //(unit: m/s), forwardSpeed, sideSpeed, rotateSpeed in body frame, 로봇의 속도를 나타내며 몸체 프레임에서의 전진, 측면, 회전 속도를 나타냄
+    float yawSpeed; //(unit: rad/s), rotateSpeed in body frame, 로봇의 회전속도(yaw speed)를 나타내며 몸체 프레임에서의 회전 속도를 나타냄
+    std::array<float, 4> rangeObstacle; //reserve, 예약된 필드로 장애물 거리 등을 나타낼 수 있음
+    std::array<Cartesian, 4> footPosition2Body; //foot position relative to body, 발의 위치를 몸체 기준으로 나타냄, Cartesian 구조체를 사용하여 각 발의 3D 좌표를 나타냄
+    std::array<Cartesian, 4> footSpeed2Body; //foot speed relative to body, 발의 속도를 몸체 기준으로 나타냄, Cartesian 구조체를 사용하여 각 발의 3D 속도를 나타냄
+    std::array<uint8_t, 40> wirelessRemote; //wireless commands, 무선 명령 데이터 포함
+    uint32_t reserve; //예약된 필드
 
+    uint32_t crc; //CRC 체크섬으로 데이터의 무결성을 검증
+  } Highstate; //high level feedback, Highstate 구조체 정의
+
+  //HighCmd 구조체 정의
+  typedef struct
+  {
+    std::array<uint8_t, 2> head; //패킷의 헤더
+    uint8_t levelFlag; //로봇의 통신 수준을 나타내는 플래그
+    uint8_t frameReserve; //프레임 예약 필드
+
+    std::array<uint32_t, 2> SN; //시리얼 넘버
+    std::array<uint32_t, 2> version; //소프트웨어 또는 하드웨어 버전 정보
+    uint16_t bandWidth; //통신 대역폭
+    uint8_t mode //0. idle(default stand): 기본 서기
+                 //1. force stand(controlled by dBodyHeight + ypr): 강제 서기(dBodyHeight + ypr로 제어)
+                 //2. target velocity walking(controlled by velocity + yawSpeed): 목표 속도로 걷기(velocity + yawSpeed로 제어)
+                 //4. path mode walking(reserve for future release): 경로 모드 걷기(미래 출시를 위한 예약 모드)
+                 //5. position stand down: 위치 서기 아래로
+                 //6. position stand up: 위치 서기 위로
+                 //7. damping mode: 감쇠 모드
+                 //9. recovery stand: 복구 서기
+
+    uint8_t gaitType; //0.idle, 1.trot, 2.trot running, 3.climb stair, 4.trot obstacle, 보행 유형
+    uint8_t speedLevel; //0.default low speed, 1.medium speed, 2.high speed(during walking, only responde MODE 3), 보행 속도
+    float footRaiseHeight; //(unit: m, default: 0.08m), foot up height while walking, 발을 들어올리는 높이이며 기본 값은 0.08m, delta 값의 범위는 [-0.1, 0.15]
+    float bodyHeight; //(unit: m, default: 0.28m), 로봇 몸체의 높이를 나타내며 기본 값은 0.28m, delta 값의 범위는 [-0.16, 0.16]
+    std::array<float, 2> position; //reserve
+    std::array<float, 3> euler; //(unit: rad), roll pitch yaw in stand mode, roll range[-0.3, 0.3], pitch range[-0.3, 0.3], yaw range[-0.6 0.6]
+    std::array<float, 2> velocity; //(unit: m/s), forwardSpeed, sideSpeed in body frame, forwardSpeed range[-0.8, 1.2], sideSpeed range[-0.25, 0.25]
 
 
 
