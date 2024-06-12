@@ -73,30 +73,3 @@ void Custom::UDPSend()
   cmd.velocity[1] = 0.0f; //몸체의 측면 속도
   cmd.yawSpeed = 0.0f; //몸체의 yaw 속도
   cmd.reserve = 0; //예약된 변수
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
