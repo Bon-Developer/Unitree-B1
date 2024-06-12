@@ -3,7 +3,7 @@ Copyright (c) 2020, Unitree Robotics.Co.Ltd. All rights reserved.
 **/
 
 /**
-Analysis by bon, June 12, 2024
+Header analysis by bon, June 12, 2024
 **/
 
 //헤더 가드: 헤어 파일이 여러번 포함되는 것을 방지
