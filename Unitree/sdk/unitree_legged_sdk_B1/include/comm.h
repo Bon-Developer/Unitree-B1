@@ -35,6 +35,7 @@ namespace UNITREE_LEGGED_SDK //UNITREE_LEGGED_SDK에 포함되는 모든 내용�
     std::array<uint8_t, 3> reserve; //유형: 'std::array<uint8_t, 3>', 예약된 필드로, 현재 사용되지 않지만 미래 확장이나 특정 프로토콜 요구 사항을 위해 존재
   } BmsCmd; //BmsCmd 구조체 정의
 
+
   //BmsState 구조체 정의
   typedef struct
   {
@@ -53,6 +54,7 @@ namespace UNITREE_LEGGED_SDK //UNITREE_LEGGED_SDK에 포함되는 모든 내용�
     //std::array<uint16_t, 10> cell_vol;
   } BmsState; //BmsState 구조체 정의
 
+
   //Cartesian 구조체 정의
   typedef struct
   {
@@ -61,6 +63,7 @@ namespace UNITREE_LEGGED_SDK //UNITREE_LEGGED_SDK에 포함되는 모든 내용�
     float y;
     float z;
   } Cartesian; //Cartesian 구조체 정의
+
 
   //IMU 구조체 정의
   typedef struct
@@ -111,7 +114,47 @@ namespace UNITREE_LEGGED_SDK //UNITREE_LEGGED_SDK에 포함되는 모든 내용�
   } MotorCmd; //motor control, 모터 제어 명령을 나타내는 구조체
 
   
-    
+  //LowState 구조체 정의
+  typedef struct
+  {
+    std::array<uint8_t, 2> head; //패킷의 헤더
+    uint8_t levelFlag; //로봇의 통신 수준을 나타내는 플래그
+    uint8_t frameReserve; //프레임 예약 필드
+
+    std::array<uint32_t, 2> SN; //시리얼 넘버
+    std::array<uint32_t, 2> version; //소프트웨어 또는 하드웨어 버전 정보
+    uint16_t bandWidth; //통신 대역폭
+    IMU imu; //IMU 데이터 포함
+    std::array<MotorState, 20> motorState; //20개의 모터 상태를 나타냄
+    BmsState bms; //배터리 관리 시스템(BMS) 상태를 나타냄
+    std::array<int16_t, 4> footForce; //reserve, 발의 힘(예약된 필드로 사용되지 않음)
+    std::array<int16_t, 4> footForceEst; //reserve, 발의 힘 추정치(예약된 필드로 사용되지 않음
+    uint32_t tick; //reference real-time from motion contorller(unit: ms), 모션 컨트롤러의 실시간 기준
+
+    std::array<uint8_t, 40> wirelessRemote; //wireless commands, 무선 명령 데이터 포함
+    uint32_t reserve; //예약된 필드로, 나중에 사용될 수 있음
+
+    uint32_t crc; //CRC 체크섬으로 데이터의 무결성을 검증
+  } LowState; //low level feedback, LowState 구조체 정의
+
+  //LowCmd 구조체 정의
+  typedef struct
+  {
+    std::array<uint8_t, 2> head; //패킷의 헤더
+    uint8_t levelFlag; //로봇의 통신 수준을 나타내는 플래그
+    uint8_t frameReserve; //프레임 예약 필드
+
+    std::array<uint32_t, 2> SN; //시리얼 넘버
+    std::array<uint32_t, 2> version; //소프트웨어 또는 하드웨어 버전 정보
+    uint16_t bandWidth; //통신 대역폭
+    std::array<MotorCmd, 20> motorCmd; //20개의 모터 상태를 나타냄
+    BmsState bms; //배터리 관리 시스템(BMS) 상태를 나타냄
+    std::array<uint8_t, 40> wirelessRemote; //wireless commands, 무선 명령 데이터 포함
+    uint32_t reserve; //예약된 필드로, 나중에 사용될 수 있음
+
+    uint32_t crc; //CRC 체크섬으로 데이터의 무결성을 검증
+  } LowCmd; //low level control, LowCmd 구조체 정의
+
 
 
 
