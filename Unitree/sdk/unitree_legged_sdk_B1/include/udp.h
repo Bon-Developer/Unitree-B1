@@ -64,7 +64,54 @@ namespace UNITREE_LEGGED_SDK
     int Send(); //송신 메소드, 데이터 전송
     int Recv(); //directly save in buffer, 수신 메소드, 데이터를 수신하여 버퍼에 직접 저장
 
-    void InitCmdData(HighCmd &cmd);
+    void InitCmdData(HighCmd &cmd); //HighCmd 명령 데이터 초기화
+    void InitCmdData(LowCmd &cmd); //LowCmd 명령 데이터 초기화
+    //전송할 데이터 설정
+    int SetSend(char *);
+    int SetSend(HighCmd &);
+    int SetSend(LowCmd &);
+
+    //수신할 데이터 설정
+    void GetRecv(char *);
+    void GetRecv(HighState &);
+    void GetRecv(LowState &);
+
+    UDPState udpState; //UDP 통신 상태를 나타냄
+    char *targetIP; //목표 IP 주소를 나타냄
+    uint16_t targetPort; //목표 포트를 나타냄
+    char *localIP; //로컬 IP 주소를 나타냄
+    uint16_t localPort; //로컬 포트를 나타냄
+    bool accessible = false; //can access or not, 데이터 접근 가능 여부를 나타냄
+    bool print = false; //출력 여부를 나타냄
+
+  private:
+    void init(uint16_t loaclPort, const char *targetIP=NULL, uint16_t targetPort = 0); 
+    //멤버 변수 정의
+    int sockFd; //소켓 파일 디스크립터
+    bool connected; //udp works with connect() fuction, rather than server mode;, 연결 여부를 나타냄
+    int sendLength; //송신 데이터 길이를 나타냄
+    int recvLength; //수신 데이터 길이를 나타냄
+    int lose_recv; //수신 손실을 나타냄
+
+    char *recvBuf; //수신 버퍼를 나타냄
+    char *recvAvaliable; //사용할 수 있는 수신 버퍼를 나타냄
+    char *sendBuf; //송신 버퍼를 나타냄
+    pthread_mutex_t sendMutex; //송신 뮤텍스를 나타냄
+    pthread_mutex_t recvMutex; //수신 뮤텍스를 나타냄
+    pthread_mutex_t udpMutex; //UDP 뮤텍스를 나타냄
+
+    bool nonblock = true; //비차단 모드 여부를 나타냄
+    int blockTimeout = -1; //use time out method or not(unit: ms), 타임아웃 시간을 나타냄
+    bool initiativeDisconnect = false; //연결 해제 여부를 나타냄
+};
+
+}
+
+#endif
+
+
+
+    
     
 
 
