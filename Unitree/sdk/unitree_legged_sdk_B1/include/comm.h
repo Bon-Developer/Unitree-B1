@@ -213,8 +213,33 @@ namespace UNITREE_LEGGED_SDK //UNITREE_LEGGED_SDK에 포함되는 모든 내용�
     std::array<float, 2> position; //reserve
     std::array<float, 3> euler; //(unit: rad), roll pitch yaw in stand mode, roll range[-0.3, 0.3], pitch range[-0.3, 0.3], yaw range[-0.6 0.6]
     std::array<float, 2> velocity; //(unit: m/s), forwardSpeed, sideSpeed in body frame, forwardSpeed range[-0.8, 1.2], sideSpeed range[-0.25, 0.25]
+    float yawSpeed;
+    std::array<float, 2> dComXy; //reserve, desired CoM X,Y 설정할 때 사용할 수 있는 예약 필드
+    std::array<float, 2> dstandFootXy; //reserve, desired Foot X,Y 설정할 때 사용할 수 있는 예약 필드
+    BmsCmd bms; //배터리 시스템
+    std::array<LED, 4> led; //reserve
+    std::array<uint8_t, 40> wirelessRemote;
+    uint32_t reserve;
 
+    uint32_t crc;
+} HighCmd; //high level control, HighCmd 구조체 정의
 
+#pragma pack() //구조체 멤버의 메모리 정렬을 제어하는데 사용, 인수가 없는 경우 구조체의 멤버들이 기본 정렬 방식으로 돌아감
+
+  typedef struct
+  {
+    unsigned long long TotalCount; //total loop count, 전체 통신 루프가 몇 번 실행되었는지 추적
+    unsigned long long SendCount; //total send count, 총 몇 번의 UDP 패킷이 성공적으로 전송되었는지 추적
+    unsigned long long RecvCount; //total receive count, 총 몇 번의 UDP 패킷이 성공적으로 수신되었는지 추적
+    unsigned long long SendError; //total send error, 전송 과정에서 발생한 오류의 횟수를 추적
+    unsigned long long FlagError; //total flag error, 통신 중 발생한 플래그 관련 오류의 횟수를 추적
+    unsigned long long RecvCRCError; //total receive CRC error, 수신된 패킷의 CRC 체크에서 발생한 오류의 횟수를 추적
+    unsigned long long RecvLoseError; //total lose package count, 통신 중 손실된 패킷의 횟수를 추적
+  } UDPState; //UDP communication state, UDPState 구조체 정의
+}
+
+#endif
+    
 
 
 
