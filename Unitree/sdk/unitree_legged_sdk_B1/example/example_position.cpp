@@ -69,6 +69,136 @@ void Custom::RobotControl()
   //printf("%d %f\n", motiontime, state.motorState[FR_2].q);
   printf("%d %f ^%f\n", motiontiome, state.motorState[FR_1].q, state.motorState[FR_1].dq);
 
+  //graivty compensation
+  cmd.motorCmd[FR_0].tau = -5.0f; //첫 번째 관절에 중력 보상 토크 적용
+  //cmd.motorCmd[FL_0].tau = +0.65f;
+  //cmd.motorCmd[RR_0].tau = -0.65f;
+  //cmd.motorCmd[RL_0].tau = 0.65f;
+
+  //if(motiontime >= 100){ 
+  if(motiontime >= 0)
+  {
+    //first, get record initial position
+    //if(motiontime >= 100 && motiontime <= 500){
+    if(motiontime >= 0 && motiontime < 10) //초기 위치 기록
+      {
+        qInit[0] = state.motorState[FR_0].q;
+        qInit[1] = state.motorState[FR_1].q;
+        qInit[2] = state.motorState[FR_2].q;
+      }
+    //second, move to the origin point of a sine movement with Kp Kd
+    //if(motiontime >= 500 && motiontime < 1500){
+    if(motiontime >= 10 && motiontime < 400)
+      {
+        rate_count++;
+        double rate = rate_count / 200.0; //needs count to 200
+        //Kp[0] = 5.0; Kp[1] = 5.0; Kp[2] = 5.0;
+        //Kd[0] = 1.0; Kd[1] = 1.0; Kd[2] = 1.0;
+        //Kp와 Kd 설정
+        Kp[0] = 20.0;
+        Kp[1] = 20.0;
+        Kp[2] = 20.0;
+        Kd[0] = 2.0;
+        Kd[1] = 2.0;
+        Kd[2] = 2.0;
+
+        //각 관절의 초기 위치에서 중간 목표 위치까지 선형 이동
+        qDes[0] = jointLinearInterpolation(qInit[0], sin_mid_q[0], rate);
+        qDes[1] = jointLinearInterpolation(qInit[1], sin_mid_q[1], rate);
+        qDes[2] = jointLinearInterpolation(qInit[2], sin_mid_q[2], rate);
+      }
+
+    double sin_joint1, sin_joint2;
+    //last, do sine wave
+    float freq_Hz = 1;
+    //float freq_Hz = 5;
+    float freq_rad = freq_Hz * 2 * M_PI;
+    float t = dt * sin_count;
+    if(motiontime >= 400)
+    {
+      //첫 번째 관절은 중간 목표 위치에 그대로 두고, 두 번째 세 번째 관절은 사인파 형태로 움직임
+      sin_count++;
+      //sin_joint1 = 0.6 * sin(3 * M_PI * sin_count / 1000.0);
+      //sin_joint2 = -0.9 * sin(3 * M_PI * sin_count / 1000.0);
+      sin_joint1 = 0.6 * sin(t * freq_rad);
+      sin_joint2 = -0.9 * sin(t * freq_rad);
+      qDes[0] = sin_mid_q[0];
+      qDes[1] = sin_mid_q[1] + sin_joint1;
+      qDes[2] = sin_mid_q[2] + sin_joint2;
+      //qDes[2] = sin_mid_q[2];
+    }
+
+    각 관절에 대해 목표 위치, 속도, P,D 게인, 토크 설정
+    cmd.motorCmd[FR_0].q = qDes[0];
+    cmd.motorCmd[FR_0].dq = 0;
+    cmd.motorCmd[FR_0].Kp = Kp[0];
+    cmd.motorCmd[FR_0].Kd = Kd[0];
+    cmd.motorCmd[FR_0].tau = -4.0f;
+
+    cmd.motorCmd[FR_1].q = qDes[1];
+    cmd.motorCmd[FR_1].dq = 0;
+    cmd.motorCmd[FR_1].Kp = Kp[1];
+    cmd.motorCmd[FR_1].Kd = Kd[1];
+    cmd.motorCmd[FR_1].tau = 0.0f;
+
+
+    cmd.motorCmd[FR_2].q = qDes[2];
+    cmd.motorCmd[FR_2].dq = 0;
+    cmd.motorCmd[FR_2].Kp = Kp[2];
+    cmd.motorCmd[FR_2].Kd = Kd[2];
+    cmd.motorCmd[FR_2].tau = 0.0f;
+    //cmd.motorCmd[FR_2].tau = 2 * sin(t * freq_rad);
+  }
+
+//if(motiontime > 10){
+//  safe.PositionLimit(cmd);
+//  safe.PowerProtect(cmd, state, 1);
+//  safe.PositionProtect(cmd, state, 0.087);
+//}
+
+  udp.SetSend(cmd);
+}
+
+int main(void)
+{
+  std::cout << "Communication level is set to Low-level." << std::endl
+            << "WARNING: Make sure the robot is hung up." << std::endl
+            << "Press Enter to continue..." << std::endl;
+  std::cin.ignore();
+
+  Custom custom(LOWLEVEL);
+  InitEnvironment(); 
+  LoopFunc loop_control("control_loop", custom.dt, boost::bind(&Custom::RobotControl, &custom));
+  LoopFunc loop_udpSend("udp_send", custom.dt, 3, boost::bind(&Custom::UDPSend, &custom));
+  LoopFunc loop_udpRecv("udp_recv", custom.dt, 3, boost::bind(&Custom::UDPRecv. &custom));
+
+  loop_udpSend.start();
+  loop_udpRecv.start();
+  loop_control.start();
+
+  while(1)
+  {
+    sleep(10);
+  };
+
+  return 0;
+}
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+    
 
 
 
