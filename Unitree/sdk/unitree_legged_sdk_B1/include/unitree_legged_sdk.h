@@ -12,7 +12,7 @@ Header analysis by bon, June 12, 2024
 
 //이걸 다 포함 시키고 있는 헤더 파일
 #include "comm.h" //통신 관련 헤더 파일
-#include "safety.h" //완전 관련 헤더 파일
+#include "safety.h" //안전 관련 헤더 파일
 #include "udp.h" //UDP 통신 관련 헤더 파일
 #include "loop.h" //루프 제어 관련 헤더 파일
 #include "quadruped.h" //4족 보행 로봇 관련 헤더 파일
