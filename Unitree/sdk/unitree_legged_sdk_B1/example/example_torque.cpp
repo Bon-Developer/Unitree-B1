@@ -79,8 +79,51 @@ void Custom::RobotControl()
     //if(torque > 15.0f) torque = 15.0f;
     //if(torque < -15.0f) torque = -15.0f;
 
+    //관절 목표 위치와 속도를 특정값들로 설정하고, 토크 제어 모드로 전환
+    //근데 PosStopF, VelStopF는 어디서 정의가 되어있는지 확인불가, 다른 헤더 파일에도 없음
     cmd.motorCmd[FR_1].q = PosStopF;
-    
+    cmd.motorCmd[FR_1].dq = VelStopF;
+    cmd.motorCmd[FR_1].Kp = 0;
+    cmd.motorCmd[FR_1].Kd = 0;
+    cmd.motorCmd[FR_1].tau = torque;
+
+    //cmd.motorCmd[FR_2].q = PosStopF;
+    //cmd.motorCmd[FR_2].dq = VelStopF;
+    //cmd.motorCmd[FR_2].Kp = 0;
+    //cmd.motorCmd[FR_2].Kd = 0;
+    //cmd.motorCmd[FR_2].tau = torque;
+  }
+    //int res = safe.PowerProtect(cmd, state, 1);
+    //if(res < 0) exit(-1);
+
+    udp.SetSend(cmd);
+}
+
+int main(void)
+{
+  std::cout << "Communication level is set to LOW-level." << std::endl 
+            << "WARNING: Make sure the robot is hung up." << std::endl
+            << "Press Enter to continue..." << std::endl;
+  std::cin.ignore();
+
+  Custom custom(LOWLEVEL);
+  InitEnvironment();
+  LoopFunc loop_control("control_loop", custom.dt, boost::bind(&Custom::RobotControl, &custom));
+  LoopFunc loop_udpSend("udp_send", custom.dt, 3, boost::bind(&Custom::UDPSend, &custom));
+  LoopFunc loop_udpRecv("udp_recv", custom.dt, 3, boost::bind(&Custom::UDPRecv, &custom));
+
+  loop_udpSend.start();
+  loop_udpRecv.start();
+  loop_control.start();
+
+  while(1)
+  {
+     sleep(10);
+  }
+
+  return 0;
+}
+
 
 
 
