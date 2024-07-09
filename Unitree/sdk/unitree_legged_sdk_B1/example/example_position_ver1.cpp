@@ -74,14 +74,11 @@ void Custom::RobotControl()
   cmd.motorCmd[FL_0].tau = -5.0f; //첫 번째 관절에 중력 보상 토크 적용
   cmd.motorCmd[RR_0].tau = -5.0f; //첫 번째 관절에 중력 보상 토크 적용
   cmd.motorCmd[RL_0].tau = -5.0f; //첫 번째 관절에 중력 보상 토크 적용
-  //cmd.motorCmd[FL_0].tau = +0.65f;
-  //cmd.motorCmd[RR_0].tau = -0.65f;
-  //cmd.motorCmd[RL_0].tau = 0.65f;
 
   if(motiontime >= 0)
   {
     //first, get record initial position
-    if(motiontime >= 0 && motiontime < 10) //초기 위치 기록
+    if(motiontime >= 0 && motiontime < 100) //초기 위치 기록
       {
         //FR
         qInit[0] = state.motorState[FR_0].q;
@@ -104,7 +101,7 @@ void Custom::RobotControl()
         qInit[11] = state.motorState[RL_2].q;
       }
     //second, move to the origin point of a sine movement with Kp Kd
-    if(motiontime >= 10 && motiontime < 400)
+    if(motiontime >= 100 && motiontime < 400)
       {
         rate_count++;
         double rate = rate_count / 200.0; //needs count to 200
