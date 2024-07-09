@@ -78,32 +78,72 @@ void Custom::UDPSend()
   if(motiontime > 0 && motiontime < 5000)
   {
     cmd.mode = 0; //기본 서기
-  }
-  else if(motiontime >= 5000 && motiontime < 10000)
+  }    
+  else if(motionitme >= 5000 && motiontime < 15000)
   {
     cmd.mode = 1; //강제 서기
   }
-  else if(motiontime >= 10000 && motiontime < 15000)
+  else if(motionitme >= 15000 && motiontime < 20000)
   {
-    cmd.mode = 5; //위치 서기 아래로
-  }
-  else if(motiontime >= 15000 && motiontime < 20000)
-  {
-    cmd.mode = 6; //위치 서기 위로
+    cmd.mode = 2; //걷기 모드
+    cmd.gaitType = 0; //기본 모드
+    cmd.velocity[0] = 0.1; //전진
   }
   else if(motionitme >= 20000 && motiontime < 25000)
   {
-    cmd.mode = 0; //기본 서기
+    cmd.mode = 2; //걷기 모드
+    cmd.gaitType = 0; //기본 모드
+    cmd.velocity[0] = -0.1; //후진
   }
   else if(motionitme >= 25000 && motiontime < 30000)
   {
-    cmd.mode = 7; //감쇠 모드
+    cmd.mode = 2; //걷기 모드
+    cmd.gaitType = 1; //trot 모드
+    cmd.velocity[0] = 0.1; //전진
   }
   else if(motionitme >= 30000 && motiontime < 35000)
   {
-    cmd.mode = 9; //복구 서기
+    cmd.mode = 2; //걷기 모드
+    cmd.gaitType = 1; //trot 모드
+    cmd.velocity[0] = -0.1; //후진
   }
   else if(motionitme >= 35000 && motiontime < 40000)
+  {
+    cmd.mode = 2; //걷기 모드
+    cmd.gaitType = 2; //trot running 모드
+    cmd.velocity[0] = 0.1; //전진
+  }
+  else if(motionitme >= 40000 && motiontime < 45000)
+  {
+    cmd.mode = 2; //걷기 모드
+    cmd.gaitType = 2; //trot 모드
+    cmd.velocity[0] = -0.1; //후진
+  }
+  else if(motionitme >= 45000 && motiontime < 50000)
+  {
+    cmd.mode = 2; //걷기 모드
+    cmd.gaitType = 3; //climb stair 모드
+    cmd.velocity[0] = 0.1; //전진
+  }
+  else if(motionitme >= 50000 && motiontime < 55000)
+  {
+    cmd.mode = 2; //걷기 모드
+    cmd.gaitType = 3; //climb stair 모드
+    cmd.velocity[0] = -0.1; //후진
+  }
+  else if(motionitme >= 55000 && motiontime < 60000)
+  {
+    cmd.mode = 2; //걷기 모드
+    cmd.gaitType = 4; //trot obstacle 모드
+    cmd.velocity[0] = 0.1; //전진
+  }
+  else if(motionitme >= 60000 && motiontime < 65000)
+  {
+    cmd.mode = 2; //걷기 모드
+    cmd.gaitType = 4; //trot obstacle 모드
+    cmd.velocity[0] = -0.1; //후진
+  }
+  else if(motionitme >= 65000 && motiontime < 70000)
   {
     cmd.mode = 1; //강제 서기
   }
