@@ -3,7 +3,7 @@ Copyright (c) 2020, Unitree Robotics.Co.Ltd. All rights reserved.
 **/
 
 /**
-Code anlaysis by bon, June 18, 2024
+Code anlaysis by bon, July 9, 2024
 **/
 
 #include "unitree_legged_sdk/unitree_legged_sdk.h"
