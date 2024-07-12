@@ -3,10 +3,10 @@
 
 from __future__ import print_function #파이썬 2.x와 3.x 간의 호환성을 위해 사용되는 구문
 
-import roslib; roslib.load_manifest('champ_teleop') #roslib 라이브러리 가져오기, champ_teleop 패키지 로드
+import roslib
+import roslib.load_manifest('champ_teleop') #roslib 라이브러리 가져오기, champ_teleop 패키지 로드
 import rospy #rospy 라이브러리 가져오기, ROS 노드 초기화 및 ROS 네트워크 내 통신 수행
 
-from sensor_msgs.msg import Joy #조이스틱 입력 송수신
 from geometry_msgs.msg import Twist #로봇 이동 명령(방향 및 속도)
 from champ_masgs.msg import Pose as PoseLite #로봇 자세 데이터
 from geometry_msgs.msg import Pose as Pose #3차원 공간에서의 위치 방향 
@@ -20,14 +20,13 @@ class Teleop:
       self.velocity_publisher = rospy.Publisher('cmd_vel', Twist, queue_size = 1) #토픽: cmd_vel, 메시지 타입: Twist
       self.pose_lite_publisher = rospy.Publisher('body_pose/raw', PoseLite, queue_size = 1) #토픽: body_pose/raw, 메시지 타입: PoseLite
       self.pose_publisher = rospy.Publisher('body_pose', Pose, queue_size = 1) #토픽: body_pose, 메시지 타입: Pose
-      self.joy_subscriber = rospy.Subscriber('joy', Joy, self.joy_callback) #토픽: joy, 메시지 타입: Joy, joy 토픽에 새로운 메시지가 도착할 때마다 콜백 함수 호출
       self.swing_height = rospy.get_param("gait/swing_height", 0) #파라미터 이름: gait/swing_hieght, 파라미터 값 가져옴. 기본값 0
       self.nominal_height = rospy.get_param("gait/nominal_height", 0) #파라미터 이름: gait/nominal_height, 파라미터 값 가져옴. 기본값 0
 
       self.speed = rospy.get_param("~speed", 0.5)
       self.turn = rospy.get_param("~turn", 0.5)
 
-      #
+      
       self.msg = """
       Reading from the keyboard and Publishing to Twist!
       ---------------------------
@@ -90,34 +89,6 @@ class Teleop:
         
       self.poll_keys()
 
-    def joy_callback(self, data):
-        twist = Twist() #Twist 메시지 생성
-        twist.linear.x = data.axes[1] * self.speed #data.axes[1]: 조이스틱 y축(앞뒤) 입력을 가져와 로봇의 x축(전진/후진) 속도 설정
-        twist.linear.y = data.buttons[4] * data.axes[0] * self.speed #조이스틱의 x축(좌우) 입력을 가져와 로봇의 y축(좌우) 속도 설정, 버튼 4번 눌렀을 때만 좌우 이동 활성화
-        twist.linear.z = 0.0 #로봇의 z축(상하) 속도는 0
-        twist.angular.x = 0.0
-        twist.angular.y = 0.0
-        twist.angular.z = (not data.buttons[4]) * data.axes[0] * self.turn #조이스틱 4번 누르지 않고, 조이스틱 x축(좌우)
-        self.velocity_publisher.publish(twist) #twist 메시지 객체에 위 내용 포함해서 publish 진행
-
-        body_pose_lite = PoseLite()
-        body_pose_lite.x = 0
-        body_pose_lite.y = 0
-        body_pose_lite.roll = (not data.buttons[5]) * -data.axes[3] * 0.349066
-        body_pose_lite.pitch = data.axes[4] * 0.174533
-        body_pose_lite.yaw = data.buttons[5] * data.axes[3] * 0.436332
-        if data.axes[5] < 0:
-            body_pose_lite.z = data.axes[5] * 0.5
-        self.pose_lite_publisher.publish(body_pose_lite)
-
-        body_pose = Pose()
-        body_pose.position.z = body_pose_lite.z
-        quaternion = tf.transformations.quaternion_from_euler(body_pose_lite.roll, body_pose_lote.pitch, body_pose_lite.yaw)
-        body_pose.orientation.x = quaternion[0]
-        body_pose.orientation.y = quaternion[1]
-        body_pose.orientation.z = quaternion[2]
-        body_pose.orientation.w = quaternion[3]
-        self.pose_publisher.publish(body_pose)
 
     def poll_keys(self): #키보드 입력을 폴링하여 이동 명령 처리, termois와 tty 모듈 사용하여 터미널 설정 제어 및 비차단 모드로 키보드 입력 읽어옴
         self.settings = termios.tcgetattr(sys.stdin) #현재 터미널의 설정을 가져와 self.settings에 저장
