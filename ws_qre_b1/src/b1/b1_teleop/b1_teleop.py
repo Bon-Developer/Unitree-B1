@@ -23,8 +23,8 @@ class Teleop:
       self.swing_height = rospy.get_param("gait/swing_height", 0) #파라미터 이름: gait/swing_hieght, 파라미터 값 가져옴. 기본값 0
       self.nominal_height = rospy.get_param("gait/nominal_height", 0) #파라미터 이름: gait/nominal_height, 파라미터 값 가져옴. 기본값 0
 
-      self.speed = rospy.get_param("~speed", 0.5)
-      self.turn = rospy.get_param("~turn", 0.5)
+      self.speed = rospy.get_param("~speed", 0.1) #기본 속도 0.1m/s
+      self.turn = rospy.get_param("~turn", 0.1) #기본 속도 0.1m/s
 
       
       self.msg = """
@@ -180,7 +180,7 @@ class Teleop:
             return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
 
 if __name__ == "__main__":
-    rospy.init_node('champ_teleop')
+    rospy.init_node('b1_teleop')
     teleop = Teleop()
                 
 
