@@ -1,11 +1,13 @@
 //20240716 Code analysis by bon
-//20240717 Ver1: mode, gaitType 퍼블리셔 추가
+//20240723(Park SangTae): mode, body_height, foot_raise_height subscriber 추가
 
 #include "b1_base/base.hpp"
 
 using namespace qre;
 Base::Base(UT::HighCmd cmd, UT::HighState state, ros::NodeHandle *nh, ros::NodeHandle *p_nh): robot_safety_(UT::LeggedType::B1)
   nh_ = nh;
+  p_nh = p_nh;
+  level_ = UT::HIGHLEVEL;
   robot_high_cmd.mode            = 2;
   robot_high_cmd.gaitType        = 1;
   robot_high_cmd.velocity        = {0.0};
@@ -22,16 +24,12 @@ Base::Base(UT::HighCmd cmd, UT::HighState state, ros::NodeHandle *nh, ros::NodeH
   battery_state_publisher_ = nh_->advertise<sensor_msgs::BatteryState>("battery_state", 1);
   joint_state_publisher_   = nh_->advertise<sensor_msgs::JointState>("joint_states", 10);
 
-  //20240717 퍼블리셔 추가
-  mode_publisher_ = p_nh_->advertise<
+  //240723 서브스크라이버 추가
+  mode_subscriber_ = p_nh_->subscribe("set_mode", 1, &Base::modeCallback, this);
+  body_height_subscriber_ = p_nh_->subscribe("set_body_height", 1, &Base::bodyHeightCallback, this);
+  foot_raise_height_subscriber_ = p_nh_->subscirbe("set_foot_raise_height", 1, &Base::footRaiseHeightCallback, this);
 
-
-
-
-
-
-
-  set_mode_ = p_nh_->advertiseService("set_mode_", &Base::setModeCallback, this);
+  //set_mode_ = p_nh_->advertiseService("set_mode_", &Base::setModeCallback, this);
   std::string ip_string;
   p_nh_->param<std::string>("target_ip", ip_string, "192.168.123.220");
   strcpy(udp_ip_, ip_string.c_str());
@@ -116,13 +114,13 @@ void Base::publishStateMessages() {
   imu_publisher_.publish(imu_msg);
 }
 
-bool Base::setModeCallback(b1_legged_msgs::SetMode::Request &req, b1_legged_msgs::SetMode::Response &res) {
-  robot_high_cmd.mode = req.mode;
-  robot_high_cmd.gaitType = req.gait_type;
-  robot_high_cmd.speedLevel = req.speed_level;
-  res.success = true;
-  return true;
-}
+// bool Base::setModeCallback(b1_legged_msgs::SetMode::Request &req, b1_legged_msgs::SetMode::Response &res) {
+//   robot_high_cmd.mode = req.mode;
+//   robot_high_cmd.gaitType = req.gait_type;
+//   robot_high_cmd.speedLevel = req.speed_level;
+//   res.success = true;
+//   return true;
+// }
 
 bool Base::setControlCallback(b1_legged_msgs::SetControl::Request &req, b1_legged_msgs::SetControl::Response &res) {
   if(std::any_of(std::begin(modes_), std::end(modes_), [=](std::string mode) {return mode == req.control;})) {    
@@ -141,8 +139,8 @@ bool Base::setControlCallback(b1_legged_msgs::SetControl::Request &req, b1_legge
 }
 
 void Base::cmdVelCallback(geometry_msgs::Twist msg) {
-  robot_high_cmd.mode=2;
-  robot_high_cmd.gaitType=0;
+  robot_high_cmd.mode = 2;
+  robot_high_cmd.gaitType = 0;
   robot_high_cmd.velocity[0] = 0.;
   robot_high_cmd.velocity[1] = 0.;
   robot_high_cmd.yawSpeed = 0.;        
@@ -208,6 +206,30 @@ void Base::jointCommandCallback(b1_legged_msgs::JointCmd msg) {
   }
   
 }
+
+//240723
+void Base::modeCallback(const b1_legged_msgs::SetMode::ConstPtr& msg)
+{
+  robot_high_cmd.mode = msg->mode;
+  robot_high_cmd.gaitType = msg->gait_type;
+  robot_high_cmd.speedLevel = msg->speed_level;
+  std::cout << "currently\t mode: " << (int)robot_high_cmd.mode << std::endl;
+  std::cout << "currently\t gait type: " << (int)robot_high.cmd.gaitType << std::endl;
+  std::cout << "currently\t speedLevel: " << (int)robot_high_cmd.speedLevel << std::endl;
+}
+
+void Base::bodyHeightCallback(const b1_legged_msgs::SetBodyHeight::ConstPtr& msg)
+{
+  robot_high_cmd.bodyHeight += msg->value;
+  std::cout << "currently\t body height: " << robot_high_cmd.footRaiseHeight << std::endl;
+}
+
+void Base::footRaiseHeightCallback(b1_legged_msgs::SetFootRaiseHeight msg)
+{
+  robot_high_cmd.footRaiseHeight += msg->value;
+  std::cout << "currently\t foot raise height: " << robot_high_cmd.footRaiseHeight << std::endl;
+}
+
 
 void qre::heartbeatMonitor() {  
   std::string ip_address;    
