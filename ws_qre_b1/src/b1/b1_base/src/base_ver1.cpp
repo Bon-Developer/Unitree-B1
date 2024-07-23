@@ -1,7 +1,7 @@
 //20240716 Code analysis by bon
 //20240717 Ver1: mode, gaitType 퍼블리셔 추가
 
-# include "b1_base/base.hpp"
+#include "b1_base/base.hpp"
 
 using namespace qre;
 Base::Base(UT::HighCmd cmd, UT::HighState state, ros::NodeHandle *nh, ros::NodeHandle *p_nh): robot_safety_(UT::LeggedType::B1)
