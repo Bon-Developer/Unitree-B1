@@ -1,4 +1,4 @@
-#include "b1_base/base_low_high_level.hpp"
+#include "b1_base/base_position.hpp"
 
 using namespace qre;
 Base::Base(UT::HighCmd cmd, UT::HighState state, ros::NodeHandle *nh, ros::NodeHandle *p_nh): robot_safety_(UT::LeggedType::B1) {
