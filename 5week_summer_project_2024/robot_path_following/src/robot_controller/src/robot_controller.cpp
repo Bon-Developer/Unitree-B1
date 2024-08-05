@@ -181,11 +181,11 @@ void moveRobot(const std::vector<Node>& pathNodes, ros::Publisher& twist_pub, ro
 
         float curr_x_odom = odom_storage.getOdomData().pose.pose.position.x; //오도메트리 x 좌표
         float curr_y_odom = odom_storage.getOdomData().pose.pose.position.y; //오도메트리 y 좌표
-        float curr_yaw_odom = odom_storage.getOdomData().pose.pose.orientation.z; //오도메트리 yaw 데이터
+        float curr_yaw_odom = odom_storage.getYaw(); //오도메트리 yaw 속도 좌표
 
         //필터링 추가
 
-        //float curr_yaw_odom = odom_storage.getYaw(); //오도메트리 yaw 속도 좌표
+        
         float distance_to_node = sqrt(pow(curr_x_odom - curr.x, 2) + pow(curr_y_odom - curr.y, 2)); //오도메트리 정보와 경로 정보 사이 거리 계산
 
 
