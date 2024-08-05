@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- Run the map server -->
+  <arg name="map_file" default="$(find b1_navigation)/maps/playpen_map.yaml"/>
+  <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
+
+  <!--- Run AMCL -->
+  <include file="$(find b1_navigation)/launch/include/amcl.launch.xml" />
+
+  <!--- Run Move Base -->
+  <include file="$(find b1_navigation)/launch/include/move_base.launch.xml" />
+
+</launch>

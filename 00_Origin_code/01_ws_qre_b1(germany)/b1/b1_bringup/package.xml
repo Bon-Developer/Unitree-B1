@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>b1_bringup</name>
+  <version>1.0.0</version>
+  <description>The b1_bringup package</description>
+  <author email="tahir.mehmood@mybotshop.de">Tahir Mehmood</author>
+  <maintainer email="support@mybotshop.de">Salman Omar Sohail</maintainer>
+  <license>Proprietary</license>
+  <url type="website">https://mybotshop.de</url>
+  <url type="repository">https://mybotshop.de</url>
+  <depend>robot_upstart</depend>
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>b1_base</build_depend>
+  <build_depend>b1_control</build_depend>
+  <build_depend>b1_description</build_depend>
+  <build_export_depend>b1_base</build_export_depend>
+  <build_export_depend>b1_control</build_export_depend>
+  <build_export_depend>b1_description</build_export_depend>
+  <exec_depend>b1_base</exec_depend>
+  <exec_depend>b1_control</exec_depend>
+  <exec_depend>b1_description</exec_depend>
+</package>
