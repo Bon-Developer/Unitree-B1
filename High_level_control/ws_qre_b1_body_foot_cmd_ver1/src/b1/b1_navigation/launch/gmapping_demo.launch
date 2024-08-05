@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+
+<launch>
+
+  <!-- Arg to remap the scan topic -->
+  <arg name="scan_topic" default="front/scan" />
+   
+  <!--- Run gmapping -->
+  <include file="$(find b1_navigation)/launch/include/gmapping.launch.xml">
+    <arg name="scan_topic" value="$(arg scan_topic)" />
+  </include>
+
+  <!--- Run Move Base -->
+  <include file="$(find b1_navigation)/launch/include/move_base.launch.xml" />
+
+</launch>

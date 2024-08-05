@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<launch>
+  
+  <!--- Run Move Base -->  
+  <include file="$(find b1_navigation)/launch/include/move_base.launch.xml">
+    <arg name="no_static_map" value="true"/>
+  </include>
+  
+</launch>
