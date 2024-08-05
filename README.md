@@ -1,2 +1,2 @@
 # Unitree-B1
-Let's practice B1
+Let's develop Unitree-B1
