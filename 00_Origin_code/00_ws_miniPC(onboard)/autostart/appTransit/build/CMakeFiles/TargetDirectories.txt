@@ -1,0 +1,3 @@
+/home/unitree/Unitree/autostart/appTransit/build/CMakeFiles/rebuild_cache.dir
+/home/unitree/Unitree/autostart/appTransit/build/CMakeFiles/appTransit.dir
+/home/unitree/Unitree/autostart/appTransit/build/CMakeFiles/edit_cache.dir

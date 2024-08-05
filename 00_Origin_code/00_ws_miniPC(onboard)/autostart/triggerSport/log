@@ -1,0 +1,8 @@
+UDP Initialized. socketfd: 3   Port: 8091
+[Loop Start] named: udp_send period: 19(ms)
+cpu unspecified
+[Loop Start] named: udp_recv period: 19(ms)
+cpu unspecified
+[Loop Start] named: control_loop period: 19(ms)
+cpu unspecified
+get feedback exit trigger

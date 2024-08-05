@@ -1,0 +1,28 @@
+UDP Initialized. socketfd: 3   Port: 8008
+UDP Initialized. socketfd: 4   Port: 8082
+UDP Initialized. socketfd: 5   Port: 8010
+UDP Initialized. socketfd: 6   Port: 8011
+UDP Initialized. socketfd: 7   Port: 8012
+UDP Initialized. socketfd: 11   Port: 8017
+[Wait] for check
+Check passed
+wrong Name wrong Model
+[Wait] for trigger: L1 + start
+[UDP Connected] client! Client IP:192.168.123.220 port:8091
+SDK trigger detected
+Be triggered
+[Payload Dynamics Parameter] mass:	0
+[Payload Dynamics Parameter] payload_com_2_body:	0 0 0
+[Payload Dynamics Parameter] payload_inertial:
+0 0 0
+0 0 0
+0 0 0
+
+[ROBOT STATE] To BALANCE_STAND
+[UDP Disconnected] client! socketfd:4 Old Client IP:192.168.123.220 port:8091
+[UDP Connected] client! Client IP:192.168.123.220 port:8083
+[UDP Disconnected] client! socketfd:4 Old Client IP:192.168.123.220 port:8083
+[UDP Connected] client! Client IP:192.168.123.220 port:8084
+[ROBOT STATE] To STAND_UP
+[ROBOT STATE] To STAND_DOWN then to PASSIVE
+[ROBOT STATE] To STAND_UP

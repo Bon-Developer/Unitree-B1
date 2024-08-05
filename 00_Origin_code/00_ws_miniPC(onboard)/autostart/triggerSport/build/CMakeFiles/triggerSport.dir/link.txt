@@ -1,0 +1,1 @@
+/usr/bin/c++     CMakeFiles/triggerSport.dir/trigger.cpp.o  -o triggerSport  -L/home/unitree/Unitree/sdk/unitree_legged_sdk_B1/lib/cpp/amd64 -Wl,-rpath,/home/unitree/Unitree/sdk/unitree_legged_sdk_B1/lib/cpp/amd64 -pthread -lunitree_legged_sdk 

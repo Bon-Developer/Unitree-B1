@@ -1,0 +1,46 @@
+unitree_legged_robot: configuration
+config_version: 1.38
+
+cam_server_ip: 101
+cam_server_port: 8051
+
+align_yaw: -179.34
+path_ID: 32
+cam_cali_factor: 1
+use_backflip : 0
+
+t_node_1      : 0
+t_node_2      : 0
+t_node_3      : 0
+t_node_4      : 0
+t_node_5      : 0
+t_node_6      : 0
+t_node_7      : 0
+t_node_8      : 0
+t_node_9      : 0
+t_node_10     : 0
+t_node_11     : 0
+t_node_12     : 0
+t_node_13     : 0
+t_node_14     : 0
+t_node_15     : 0
+t_node_16     : 0
+t_node_17     : 0
+t_node_18     : 0
+t_node_19     : 0
+t_node_20     : 0
+t_node_21     : 0
+t_node_22     : 0
+t_node_23     : 0
+t_node_24     : 0
+t_node_25     : 0
+
+wPos_1: [1, 1, 0]
+wPos_2: [1, 1, 0]
+wPos_3: [1, 1, 0]
+wPos_4: [1, 1, 0]
+wPos_5: [1, 1, 0]
+wPos_6: [1, 1, 0]
+wPos_7: [1, 1, 0]
+wPos_8: [1, 1, 0]
+wPos_9: [1, 1, 0]
